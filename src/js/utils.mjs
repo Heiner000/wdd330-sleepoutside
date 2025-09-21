@@ -22,6 +22,16 @@ export function setClick(selector, callback) {
   qs(selector).addEventListener("click", callback);
 }
 
+// set a listener for multiple elements
+export function setClickMultiple(selector, callback) {
+  const elements = document.querySelectorAll(selector);
+  elements.forEach((element) => {
+    setClick(`[data-id="${element.dataset.id}"]`, () => {
+      callback(element.dataset.id);
+    });
+  });
+}
+
 // return parameter from URL when requested
 export function getParam(param) {
   const queryString = window.location.search;
@@ -30,9 +40,15 @@ export function getParam(param) {
   return product;
 }
 
-export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = false) {
+export function renderListWithTemplate(
+  template,
+  parentElement,
+  list,
+  position = "afterbegin",
+  clear = false,
+) {
   const htmlStrings = list.map(template);
-  
+
   if (clear) {
     parentElement.innerHTML = "";
   }

@@ -1,9 +1,16 @@
-import { getLocalStorage } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  setClickMultiple,
+} from "./utils.mjs";
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+
+  // add event listners to remove buttons after rendering
+  addRemoveListeners();
 }
 
 function cartItemTemplate(item) {
@@ -18,11 +25,31 @@ function cartItemTemplate(item) {
     <h2 class="card__name">${item.Name}</h2>
   </a>
   <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-  <p class="cart-card__quantity">qty: 1</p>
+  <p class="cart-card__quantity">qty: 1  <span class="cart-remove" data-id="${item.Id}">&times;</span></p>
   <p class="cart-card__price">$${item.FinalPrice}</p>
+
 </li>`;
 
   return newItem;
+}
+
+function removeFromCart(productId) {
+  let cartItems = getLocalStorage("so-cart") || [];
+
+  // filter out item w/ product id
+  cartItems = cartItems.filter((item) => item.Id !== productId);
+
+  // save updated cart back to localStorage
+  setLocalStorage("so-cart", cartItems);
+
+  // re-render cart
+  renderCartContents();
+}
+
+function addRemoveListeners() {
+  setClickMultiple(".cart-remove", (productId) => {
+    removeFromCart(productId);
+  });
 }
 
 renderCartContents();
