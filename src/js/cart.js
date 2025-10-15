@@ -2,7 +2,10 @@ import {
   getLocalStorage,
   setLocalStorage,
   setClickMultiple,
+  loadHeaderFooter,
 } from "./utils.mjs";
+
+loadHeaderFooter();
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
